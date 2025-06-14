@@ -37,6 +37,7 @@ export function CountryCard({ country }: CountryCardProps) {
               alt={country.flags.alt || `Flag of ${country.name.common}`}
               width={300}
               height={180}
+              loading="lazy"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out"
               data-ai-hint="country flag"
             />
