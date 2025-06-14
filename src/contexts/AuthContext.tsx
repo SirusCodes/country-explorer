@@ -1,13 +1,13 @@
 "use client";
 
-import type { User } from '@/lib/types';
-import type { Dispatch, ReactNode, SetStateAction} from 'react';
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import type { User } from "@/lib/types";
+import type { ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (username: string) => void;
+  login: (username: string, password: string) => void;
   logout: () => void;
   loading: boolean;
 }
@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     try {
-      const storedAuth = localStorage.getItem('countryExplorerAuth');
+      const storedAuth = localStorage.getItem("countryExplorerAuth");
       if (storedAuth) {
         const authData = JSON.parse(storedAuth);
         setIsAuthenticated(authData.isAuthenticated);
@@ -33,29 +33,54 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(false);
   }, []);
 
-  const login = (username: string) => {
-    const userData = { name: username };
-    setIsAuthenticated(true);
-    setUser(userData);
+  const login = async (username: string, password: string) => {
+    setLoading(true);
     try {
-      localStorage.setItem('countryExplorerAuth', JSON.stringify({ isAuthenticated: true, user: userData }));
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        const userData = { name: username };
+        setIsAuthenticated(true);
+        setUser(userData);
+        localStorage.setItem(
+          "countryExplorerAuth",
+          JSON.stringify({ isAuthenticated: true, user: userData })
+        );
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+        localStorage.removeItem("countryExplorerAuth");
+        throw new Error(data.error || "Login failed");
+      }
     } catch (error) {
-      console.error("Failed to save auth state to localStorage", error);
+      setIsAuthenticated(false);
+      setUser(null);
+      localStorage.removeItem("countryExplorerAuth");
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     setIsAuthenticated(false);
     setUser(null);
     try {
-      localStorage.removeItem('countryExplorerAuth');
+      await fetch("/api/logout", { method: "POST" });
+      localStorage.removeItem("countryExplorerAuth");
     } catch (error) {
-      console.error("Failed to remove auth state from localStorage", error);
+      console.error("Failed to logout on server", error);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, loading }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, user, login, logout, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -64,7 +89,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

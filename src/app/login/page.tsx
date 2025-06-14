@@ -10,15 +10,22 @@ import { Label } from '@/components/ui/label';
 import { LogIn } from 'lucide-react';
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const { login } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (username.trim()) {
-      login(username.trim());
-      router.push('/');
+    setError("");
+    if (username.trim() && password) {
+      try {
+        await login(username.trim(), password);
+        router.push("/");
+      } catch (err: any) {
+        setError(err.message || "Login failed");
+      }
     }
   };
 
@@ -28,7 +35,7 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle className="text-2xl font-headline text-center">Welcome Back!</CardTitle>
           <CardDescription className="text-center">
-            Enter a username to explore and save your favorite countries.
+            Enter your username and password to explore and save your favorite countries.
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -45,9 +52,24 @@ export default function LoginPage() {
                 className="focus:ring-primary focus:border-primary"
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Your password"
+                required
+                className="focus:ring-primary focus:border-primary"
+              />
+            </div>
+            {error && (
+              <div className="text-destructive text-sm text-center">{error}</div>
+            )}
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full" disabled={!username.trim()}>
+            <Button type="submit" className="w-full" disabled={!username.trim() || !password}>
               <LogIn className="mr-2 h-4 w-4" />
               Login
             </Button>
