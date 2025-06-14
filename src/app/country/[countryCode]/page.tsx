@@ -94,13 +94,6 @@ export default async function CountryDetailPage({
     <>
       <CountryBordersSection country={country} />
       <div className="max-w-4xl mx-auto page-transition">
-        <Button asChild variant="outline" className="mb-8 group">
-          <Link href="/">
-            <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Countries
-          </Link>
-        </Button>
-
         <Card className="overflow-hidden shadow-xl">
           <CardHeader className="p-0 relative">
             <div className="relative w-full aspect-[2/1] max-h-[400px] bg-muted overflow-hidden">
