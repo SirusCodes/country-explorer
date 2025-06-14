@@ -52,7 +52,7 @@ export async function CountryBordersSection({
               className="truncate justify-start text-left h-auto py-2 px-3 hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all"
             >
               <Link
-                href={`/${borderCountry.cca3.toLowerCase()}`}
+                href={`/country/${borderCountry.cca3.toLowerCase()}`}
                 className="flex items-center gap-2"
               >
                 {borderCountry.flags && borderCountry.flags.svg && (

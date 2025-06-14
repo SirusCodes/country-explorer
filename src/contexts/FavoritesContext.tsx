@@ -1,8 +1,8 @@
 "use client";
 
-import type { ReactNode } from 'react';
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useAuth } from './AuthContext';
+import type { ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useAuth } from "./AuthContext";
 
 interface FavoritesContextType {
   favoriteCountries: string[];
@@ -12,7 +12,9 @@ interface FavoritesContextType {
   isLoading: boolean;
 }
 
-const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
+const FavoritesContext = createContext<FavoritesContextType | undefined>(
+  undefined
+);
 
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   const { isAuthenticated, user, loading: authLoading } = useAuth();
@@ -20,7 +22,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (authLoading) return; 
+    if (authLoading) return;
     setIsLoading(true);
     if (isAuthenticated && user) {
       try {
@@ -28,7 +30,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
         if (storedFavorites) {
           setFavoriteCountries(JSON.parse(storedFavorites));
         } else {
-          setFavoriteCountries([]); 
+          setFavoriteCountries([]);
         }
       } catch (error) {
         console.error("Failed to load favorites from localStorage", error);
@@ -43,7 +45,10 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (isAuthenticated && user && !isLoading && !authLoading) {
       try {
-        localStorage.setItem(`favorites_${user.name}`, JSON.stringify(favoriteCountries));
+        localStorage.setItem(
+          `favorites_${user.name}`,
+          JSON.stringify(favoriteCountries)
+        );
       } catch (error) {
         console.error("Failed to save favorites to localStorage", error);
       }
@@ -60,7 +65,9 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
 
   const removeFavorite = (cca3: string) => {
     if (!isAuthenticated) return;
-    setFavoriteCountries((prevFavorites) => prevFavorites.filter((favCca3) => favCca3 !== cca3));
+    setFavoriteCountries((prevFavorites) =>
+      prevFavorites.filter((favCca3) => favCca3 !== cca3)
+    );
   };
 
   const isFavorite = (cca3: string): boolean => {
@@ -69,7 +76,15 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <FavoritesContext.Provider value={{ favoriteCountries, addFavorite, removeFavorite, isFavorite, isLoading }}>
+    <FavoritesContext.Provider
+      value={{
+        favoriteCountries,
+        addFavorite,
+        removeFavorite,
+        isFavorite,
+        isLoading,
+      }}
+    >
       {children}
     </FavoritesContext.Provider>
   );
@@ -78,7 +93,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
 export const useFavorites = (): FavoritesContextType => {
   const context = useContext(FavoritesContext);
   if (context === undefined) {
-    throw new Error('useFavorites must be used within a FavoritesProvider');
+    throw new Error("useFavorites must be used within a FavoritesProvider");
   }
   return context;
 };
