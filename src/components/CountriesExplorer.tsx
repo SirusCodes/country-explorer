@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { CountryCard } from "@/components/CountryCard";
 import { SearchBar } from "@/components/SearchBar";
 import { RegionFilter } from "@/components/RegionFilter";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useDebounce } from "@/hooks/use-debounce";
 import type { CountrySummary } from "@/lib/types";
 
 interface CountriesExplorerProps {
@@ -14,11 +14,8 @@ interface CountriesExplorerProps {
 export function CountriesExplorer({ countries }: CountriesExplorerProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("all");
-  const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const debouncedSearchTerm = useDebounce(searchTerm, 400);
 
   const regions = useMemo(() => {
     if (!countries) return [];
@@ -39,31 +36,12 @@ export function CountriesExplorer({ countries }: CountriesExplorerProps) {
         (country) =>
           country.name.common
             .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          country.name.official.toLowerCase().includes(searchTerm.toLowerCase())
+            .includes(debouncedSearchTerm.toLowerCase()) ||
+          country.name.official
+            .toLowerCase()
+            .includes(debouncedSearchTerm.toLowerCase())
       );
-  }, [countries, searchTerm, selectedRegion]);
-
-  if (!isClient) {
-    return (
-      <div className="space-y-8">
-        <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
-          <Skeleton className="h-10 w-full max-w-md" />
-          <Skeleton className="h-10 w-full max-w-xs" />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {Array.from({ length: 12 }).map((_, index) => (
-            <div key={index} className="space-y-2">
-              <Skeleton className="h-48 w-full" />
-              <Skeleton className="h-6 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-4 w-1/2" />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  }, [countries, debouncedSearchTerm, selectedRegion]);
 
   return (
     <div className="space-y-8 page-transition">
