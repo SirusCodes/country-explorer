@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getCountryByCode } from '@/services/countryService';
 import { CountryDataProviderWrapper } from '@/components/CountryDataProviderWrapper'; // Helper for border countries
 import { FavoriteButtonWrapper } from '@/components/FavoriteButtonWrapper'; // Helper for FavoriteButton
+import { DetailItem } from '@/components/DetailItem'; // Import the new client component
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -36,28 +37,6 @@ export async function generateMetadata({ params }: CountryDetailPageProps): Prom
     title: `${country.name.common} | Country Explorer`,
     description: `Detailed information about ${country.name.common}, including population, region, capital, and more.`,
   };
-}
-
-function DetailItem({ icon: Icon, label, value, isLink = false }: { icon: React.ElementType, label: string, value?: string | string[] | null, isLink?: boolean }) {
-  if (!value || (Array.isArray(value) && value.length === 0)) return null;
-
-  const displayValue = Array.isArray(value) ? value.join(', ') : value;
-
-  return (
-    <div className="flex items-start space-x-3">
-      <Icon className="h-5 w-5 text-primary mt-1 shrink-0" />
-      <div>
-        <p className="text-sm text-muted-foreground">{label}</p>
-        {isLink && typeof displayValue === 'string' ? (
-          <a href={displayValue.startsWith('http') ? displayValue : `http://${displayValue}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-accent hover:underline">
-            {displayValue} <ExternalLink className="inline h-4 w-4 ml-1" />
-          </a>
-        ) : (
-          <p className="font-semibold">{displayValue}</p>
-        )}
-      </div>
-    </div>
-  );
 }
 
 export default async function CountryDetailPage({ params }: CountryDetailPageProps) {
