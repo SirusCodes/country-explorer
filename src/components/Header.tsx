@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { AuthButton } from "./AuthButton";
 import { Globe } from "lucide-react";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 export function Header() {
   return (
@@ -15,7 +16,10 @@ export function Header() {
           <Globe className="w-7 h-7 sm:w-8 sm:h-8" />
           Country Explorer
         </Link>
-        <AuthButton />
+        <div className="flex items-center gap-4">
+          <ThemeSwitcher />
+          <AuthButton />
+        </div>
       </div>
     </header>
   );
