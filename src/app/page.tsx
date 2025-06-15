@@ -1,38 +1,14 @@
 import { CountriesExplorer } from "@/components/CountriesExplorer";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { WifiOff } from "lucide-react";
-import type { CountrySummary } from "@/lib/types";
-import { getAllCountriesForList } from "@/services/countryService";
+import { CountryRegionWrapper } from "@/components/CountryRegionWrapper";
 
 export const revalidate = 86400; // Regenerate this page every 24 hours
 
-export default async function HomePage() {
-  let countries: CountrySummary[] = [];
-  let error: string | null = null;
-  try {
-    const data = await getAllCountriesForList();
-    countries = data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-  } catch (err) {
-    error = err instanceof Error ? err.message : "Unknown error";
-  }
-
-  const uniqueRegions = new Set(
-    countries.map((country) => country.region).filter(Boolean),
+export default function HomePage() {
+  return (
+    <CountryRegionWrapper>
+      {({ countries, regions }) => {
+        return <CountriesExplorer countries={countries} regions={regions} />;
+      }}
+    </CountryRegionWrapper>
   );
-  const regions = Array.from(uniqueRegions).sort();
-
-  if (error) {
-    return (
-      <Alert variant="destructive" className="max-w-2xl mx-auto">
-        <WifiOff className="h-4 w-4" />
-        <AlertTitle>Error Fetching Countries</AlertTitle>
-        <AlertDescription>
-          Could not load country data. Please check your internet connection and
-          try again. Details: {error}
-        </AlertDescription>
-      </Alert>
-    );
-  }
-
-  return <CountriesExplorer countries={countries} regions={regions} />;
 }
