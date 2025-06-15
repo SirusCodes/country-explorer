@@ -7,8 +7,8 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (username: string, password: string) => void;
-  logout: () => void;
+  login: (username: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
   loading: boolean;
 }
 
@@ -48,14 +48,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(userData);
         localStorage.setItem(
           "countryExplorerAuth",
-          JSON.stringify({ isAuthenticated: true, user: userData }),
+          JSON.stringify({ isAuthenticated: true, user: userData })
         );
-      } else {
-        setIsAuthenticated(false);
-        setUser(null);
-        localStorage.removeItem("countryExplorerAuth");
-        throw new Error(data.error || "Login failed");
+        return;
       }
+
+      throw new Error(data.error || "Login failed");
     } catch (error) {
       setIsAuthenticated(false);
       setUser(null);

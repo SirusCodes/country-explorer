@@ -28,7 +28,7 @@ export default function LoginPage() {
     setError("");
     if (username.trim() && password) {
       try {
-        login(username.trim(), password);
+        await login(username.trim(), password);
         router.push("/");
       } catch (err: any) {
         setError(err.message || "Login failed");
