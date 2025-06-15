@@ -1,13 +1,20 @@
 "use client";
 
-import { useState, type FormEvent } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { LogIn } from 'lucide-react';
+import { useState, type FormEvent } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { LogIn } from "lucide-react";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -21,7 +28,7 @@ export default function LoginPage() {
     setError("");
     if (username.trim() && password) {
       try {
-        await login(username.trim(), password);
+        login(username.trim(), password);
         router.push("/");
       } catch (err: any) {
         setError(err.message || "Login failed");
@@ -33,9 +40,12 @@ export default function LoginPage() {
     <div className="flex justify-center items-center min-h-[calc(100vh-200px)] page-transition">
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader>
-          <CardTitle className="text-2xl font-headline text-center">Welcome Back!</CardTitle>
+          <CardTitle className="text-2xl font-headline text-center">
+            Welcome Back!
+          </CardTitle>
           <CardDescription className="text-center">
-            Enter your username and password to explore and save your favorite countries.
+            Enter your username and password to explore and save your favorite
+            countries.
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -65,11 +75,17 @@ export default function LoginPage() {
               />
             </div>
             {error && (
-              <div className="text-destructive text-sm text-center">{error}</div>
+              <div className="text-destructive text-sm text-center">
+                {error}
+              </div>
             )}
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full" disabled={!username.trim() || !password}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={!username.trim() || !password}
+            >
               <LogIn className="mr-2 h-4 w-4" />
               Login
             </Button>

@@ -1,15 +1,15 @@
 "use client";
 
-import { Input } from '@/components/ui/input';
-import { Search as SearchIcon } from 'lucide-react';
-import type { ChangeEvent } from 'react';
+import { Input } from "@/components/ui/input";
+import { Search as SearchIcon } from "lucide-react";
+import type { ChangeEvent } from "react";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
   initialQuery?: string;
 }
 
-export function SearchBar({ onSearch, initialQuery = '' }: SearchBarProps) {
+export function SearchBar({ onSearch, initialQuery = "" }: SearchBarProps) {
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     onSearch(event.target.value);
   };

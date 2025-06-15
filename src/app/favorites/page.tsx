@@ -16,9 +16,7 @@ export default function FavoritesPage() {
       setLoading(true);
       try {
         const all = await getAllCountriesForList();
-        setCountries(
-          all.filter((c) => favoriteCountries.includes(c.cca3))
-        );
+        setCountries(all.filter((c) => favoriteCountries.includes(c.cca3)));
       } catch (e) {
         setCountries([]);
       }

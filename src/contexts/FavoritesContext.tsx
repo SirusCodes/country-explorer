@@ -13,7 +13,7 @@ interface FavoritesContextType {
 }
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
@@ -47,7 +47,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
       try {
         localStorage.setItem(
           `favorites_${user.name}`,
-          JSON.stringify(favoriteCountries)
+          JSON.stringify(favoriteCountries),
         );
       } catch (error) {
         console.error("Failed to save favorites to localStorage", error);
@@ -66,7 +66,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   const removeFavorite = (cca3: string) => {
     if (!isAuthenticated) return;
     setFavoriteCountries((prevFavorites) =>
-      prevFavorites.filter((favCca3) => favCca3 !== cca3)
+      prevFavorites.filter((favCca3) => favCca3 !== cca3),
     );
   };
 

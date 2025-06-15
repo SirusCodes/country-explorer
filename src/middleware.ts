@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PUBLIC_PATHS = ["/", "/login", "/favicon.ico", "/_next", "/api/login", "/api/logout"];
+const PUBLIC_PATHS = [
+  "/",
+  "/login",
+  "/favicon.ico",
+  "/_next",
+  "/api/login",
+  "/api/logout",
+];
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   // Allow public paths
-  if (PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(path + "/"))) {
+  if (
+    PUBLIC_PATHS.some(
+      (path) => pathname === path || pathname.startsWith(path + "/"),
+    )
+  ) {
     return NextResponse.next();
   }
   // Check auth cookie

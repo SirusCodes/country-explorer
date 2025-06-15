@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getCountryByCode } from "@/services/countryService";
-import { FavoriteButtonWrapper } from "@/components/FavoriteButtonWrapper"; // Helper for FavoriteButton
 import { DetailItem } from "@/components/DetailItem"; // Import the new client component
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 import type { CountryDetailData, CountrySummary } from "@/lib/types";
 import { CountryBordersSection } from "@/components/CountryBordersSection";
+import { FavoriteButton } from "@/components/FavoriteButton";
 
 export const revalidate = 86400; // Regenerate this page every 24 hours
 
@@ -93,7 +93,7 @@ export default async function CountryDetailPage({
   return (
     <>
       <CountryBordersSection country={country} />
-      <div className="max-w-4xl mx-auto page-transition">
+      <div className="max-w-4xl mx-auto page-transition mt-8">
         <Card className="overflow-hidden shadow-xl">
           <CardHeader className="p-0 relative">
             <div className="relative w-full aspect-[2/1] max-h-[400px] bg-muted overflow-hidden">
@@ -115,7 +115,7 @@ export default async function CountryDetailPage({
                 <CardTitle className="text-3xl md:text-4xl font-headline mb-2 sm:mb-0">
                   {country.name.common}
                 </CardTitle>
-                <FavoriteButtonWrapper countryCca3={country.cca3} />
+                <FavoriteButton countryCca3={country.cca3} />
               </div>
               <Badge variant="secondary" className="font-normal text-lg">
                 {country.name.official}

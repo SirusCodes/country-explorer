@@ -20,7 +20,7 @@ export function CountriesExplorer({ countries }: CountriesExplorerProps) {
   const regions = useMemo(() => {
     if (!countries) return [];
     const uniqueRegions = new Set(
-      countries.map((country) => country.region).filter(Boolean)
+      countries.map((country) => country.region).filter(Boolean),
     );
     return Array.from(uniqueRegions).sort();
   }, [countries]);
@@ -30,7 +30,7 @@ export function CountriesExplorer({ countries }: CountriesExplorerProps) {
     return countries
       .filter(
         (country) =>
-          selectedRegion === "all" || country.region === selectedRegion
+          selectedRegion === "all" || country.region === selectedRegion,
       )
       .filter(
         (country) =>
@@ -39,7 +39,7 @@ export function CountriesExplorer({ countries }: CountriesExplorerProps) {
             .includes(debouncedSearchTerm.toLowerCase()) ||
           country.name.official
             .toLowerCase()
-            .includes(debouncedSearchTerm.toLowerCase())
+            .includes(debouncedSearchTerm.toLowerCase()),
       );
   }, [countries, debouncedSearchTerm, selectedRegion]);
 

@@ -6,8 +6,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Globe } from 'lucide-react';
+} from "@/components/ui/select";
+import { Globe } from "lucide-react";
 
 interface RegionFilterProps {
   regions: string[];
@@ -15,11 +15,21 @@ interface RegionFilterProps {
   onRegionChange: (region: string) => void;
 }
 
-export function RegionFilter({ regions, selectedRegion, onRegionChange }: RegionFilterProps) {
+export function RegionFilter({
+  regions,
+  selectedRegion,
+  onRegionChange,
+}: RegionFilterProps) {
   return (
     <div className="relative w-full max-w-xs">
-       <Select onValueChange={onRegionChange} defaultValue={selectedRegion || "all"}>
-        <SelectTrigger className="shadow-sm focus:ring-primary focus:border-primary" aria-label="Filter by region">
+      <Select
+        onValueChange={onRegionChange}
+        defaultValue={selectedRegion || "all"}
+      >
+        <SelectTrigger
+          className="shadow-sm focus:ring-primary focus:border-primary"
+          aria-label="Filter by region"
+        >
           <div className="flex items-center gap-2">
             <Globe className="h-5 w-5 text-muted-foreground" />
             <SelectValue placeholder="Filter by Region" />
