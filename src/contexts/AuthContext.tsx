@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(userData);
         localStorage.setItem(
           "countryExplorerAuth",
-          JSON.stringify({ isAuthenticated: true, user: userData })
+          JSON.stringify({ isAuthenticated: true, user: userData }),
         );
         return;
       }

@@ -9,21 +9,17 @@ import type { CountrySummary } from "@/lib/types";
 
 interface CountriesExplorerProps {
   countries: CountrySummary[];
+  regions: string[];
 }
 
-export function CountriesExplorer({ countries }: CountriesExplorerProps) {
+export function CountriesExplorer({
+  countries,
+  regions,
+}: CountriesExplorerProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("all");
 
   const debouncedSearchTerm = useDebounce(searchTerm, 400);
-
-  const regions = useMemo(() => {
-    if (!countries) return [];
-    const uniqueRegions = new Set(
-      countries.map((country) => country.region).filter(Boolean),
-    );
-    return Array.from(uniqueRegions).sort();
-  }, [countries]);
 
   const filteredCountries = useMemo(() => {
     if (!countries) return [];

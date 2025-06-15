@@ -10,10 +10,16 @@ export default async function HomePage() {
   let countries: CountrySummary[] = [];
   let error: string | null = null;
   try {
-    countries = await getAllCountriesForList();
+    const data = await getAllCountriesForList();
+    countries = data.sort((a, b) => a.name.common.localeCompare(b.name.common));
   } catch (err) {
     error = err instanceof Error ? err.message : "Unknown error";
   }
+
+  const uniqueRegions = new Set(
+    countries.map((country) => country.region).filter(Boolean),
+  );
+  const regions = Array.from(uniqueRegions).sort();
 
   if (error) {
     return (
@@ -28,5 +34,5 @@ export default async function HomePage() {
     );
   }
 
-  return <CountriesExplorer countries={countries} />;
+  return <CountriesExplorer countries={countries} regions={regions} />;
 }
