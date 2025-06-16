@@ -18,6 +18,15 @@ export function AuthButton() {
   const { isAuthenticated, user, logout, loading } = useAuth();
   const router = useRouter();
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   if (loading) {
     return (
       <Button
@@ -65,7 +74,7 @@ export function AuthButton() {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            onClick={logout}
+            onClick={handleLogout}
             className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
           >
             <LogOut className="mr-2 h-4 w-4" />
