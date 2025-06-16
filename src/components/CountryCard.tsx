@@ -13,15 +13,20 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Users, MapPin, Landmark } from "lucide-react";
 import { FavoriteButton } from "./FavoriteButton";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CountryCardProps {
   country: CountrySummary;
 }
 
 export function CountryCard({ country }: CountryCardProps) {
+  const { isAuthenticated } = useAuth();
+
   return (
     <Link
-      href={`/country/${country.cca3.toLowerCase()}`}
+      href={
+        isAuthenticated ? `/country/${country.cca3.toLowerCase()}` : "/login"
+      }
       className="block group page-transition"
       aria-label={`View details for ${country.name.common}`}
     >

@@ -1,14 +1,21 @@
 "use client";
 
 import type { User } from "@/lib/types";
+import { authenticate } from "@/services/authService";
 import type { ReactNode } from "react";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useTransition,
+} from "react";
 
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (username: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  login: (username: string, password: string) => void;
+  logout: () => void;
   loading: boolean;
 }
 
@@ -17,32 +24,27 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, startTransition] = useTransition();
 
   useEffect(() => {
     try {
-      const storedAuth = localStorage.getItem("countryExplorerAuth");
-      if (storedAuth) {
-        const authData = JSON.parse(storedAuth);
-        setIsAuthenticated(authData.isAuthenticated);
-        setUser(authData.user);
-      }
+      startTransition(() => {
+        const storedAuth = localStorage.getItem("countryExplorerAuth");
+        if (storedAuth) {
+          const authData = JSON.parse(storedAuth);
+          setIsAuthenticated(authData.isAuthenticated);
+          setUser(authData.user);
+        }
+      });
     } catch (error) {
       console.error("Failed to load auth state from localStorage", error);
     }
-    setLoading(false);
   }, []);
 
-  const login = async (username: string, password: string) => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      const data = await res.json();
-      if (data.success) {
+  const login = (username: string, password: string) => {
+    startTransition(async () => {
+      const valid = await authenticate(username, password);
+      if (valid) {
         const userData = { name: username };
         setIsAuthenticated(true);
         setUser(userData);
@@ -53,26 +55,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      throw new Error(data.error || "Login failed");
-    } catch (error) {
       setIsAuthenticated(false);
       setUser(null);
       localStorage.removeItem("countryExplorerAuth");
-      throw error;
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   const logout = async () => {
-    setIsAuthenticated(false);
-    setUser(null);
-    try {
-      await fetch("/api/logout", { method: "POST" });
+    startTransition(() => {
+      setIsAuthenticated(false);
+      setUser(null);
       localStorage.removeItem("countryExplorerAuth");
-    } catch (error) {
-      console.error("Failed to logout on server", error);
-    }
+    });
   };
 
   return (

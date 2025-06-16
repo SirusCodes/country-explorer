@@ -42,6 +42,10 @@ export function AuthButton() {
   }
 
   const favourite = () => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
     router.push("/favorites");
   };
 
